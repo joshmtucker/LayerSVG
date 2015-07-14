@@ -12,7 +12,7 @@ exports.LayerSVG = (function(superClass) {
     }
     this.createShape = bind(this.createShape, this);
     LayerSVG.__super__.constructor.call(this, options);
-    this.html = "<svg id='svg' width='" + this.width + "' height='" + this.height + "'>";
+    this.html = "<svg id='svg' width='" + this.width + "' height='" + this.height + "'>/<svg>";
     this.svg = this.querySelector("#svg");
   }
 

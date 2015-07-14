@@ -3,7 +3,7 @@ class exports.LayerSVG extends Layer
 		
 		super options
 
-		@.html = "<svg id='svg' width='#{@.width}' height='#{@.height}'>"
+		@.html = "<svg id='svg' width='#{@.width}' height='#{@.height}'>/<svg>"
 		@.svg = @.querySelector("#svg")
 
 	createShape: (type, options={}) =>
@@ -55,3 +55,4 @@ class exports.LayerSVG extends Layer
 				path.setAttributeNS(null, "d", "#{options.path}")
 
 				@.svg.appendChild(path)
+
