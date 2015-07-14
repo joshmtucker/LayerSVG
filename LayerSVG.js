@@ -17,7 +17,7 @@ exports.LayerSVG = (function(superClass) {
   }
 
   LayerSVG.prototype.createShape = function(type, options) {
-    var circle, ellipse, line, rect, shape;
+    var circle, ellipse, line, path, polygon, rect, shape;
     if (options == null) {
       options = {};
     }
@@ -51,6 +51,14 @@ exports.LayerSVG = (function(superClass) {
           line.setAttributeNS(null, "y2", "" + options.y2);
           line.setAttributeNS(null, "stroke", "black");
           return this.svg.appendChild(line);
+        case type !== "polygon":
+          polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+          polygon.setAttributeNS(null, "points", "" + options.points);
+          return this.svg.appendChild(polygon);
+        case type !== "path":
+          path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          path.setAttributeNS(null, "d", "" + options.path);
+          return this.svg.appendChild(path);
       }
     }).call(this);
   };

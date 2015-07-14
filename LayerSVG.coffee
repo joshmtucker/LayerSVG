@@ -43,3 +43,15 @@ class exports.LayerSVG extends Layer
 				line.setAttributeNS(null, "stroke", "black")
 
 				@.svg.appendChild(line)
+
+			when type is "polygon"
+				polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon")
+				polygon.setAttributeNS(null, "points", "#{options.points}")
+
+				@.svg.appendChild(polygon)
+
+			when type is "path"
+				path = document.createElementNS("http://www.w3.org/2000/svg", "path")
+				path.setAttributeNS(null, "d", "#{options.path}")
+
+				@.svg.appendChild(path)
