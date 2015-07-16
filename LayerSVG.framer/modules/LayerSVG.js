@@ -11,7 +11,7 @@ exports.LayerSVG = (function(superClass) {
       options = {};
     }
     this.addShape = bind(this.addShape, this);
-    this.shapes = [];
+    this.shapes = {};
     LayerSVG.__super__.constructor.call(this, options);
     this.html = "<svg id='" + options.id + "' width='" + this.width + "' height='" + this.height + "'>/<svg>";
     this.svg = this.querySelector("#" + options.id);
@@ -29,7 +29,7 @@ exports.LayerSVG = (function(superClass) {
       shape.setAttributeNS(null, "" + option, "" + options[option]);
     }
     this.svg.appendChild(shape);
-    this.shapes.push(shape);
+    this.shapes["" + options.id] = shape;
     return shape;
   };
 

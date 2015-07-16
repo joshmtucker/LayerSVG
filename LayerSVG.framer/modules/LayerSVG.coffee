@@ -1,7 +1,7 @@
 class exports.LayerSVG extends Layer 
 	constructor: (options={}) ->
 
-		@.shapes = []
+		@.shapes = {}
 		
 		super options
 
@@ -15,6 +15,6 @@ class exports.LayerSVG extends Layer
 			shape.setAttributeNS(null, "#{option}", "#{options[option]}")
 
 		@.svg.appendChild(shape)
-		@.shapes.push(shape)
+		@.shapes["#{options.id}"] = shape
 
 		return shape
