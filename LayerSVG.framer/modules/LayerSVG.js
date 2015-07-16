@@ -10,57 +10,27 @@ exports.LayerSVG = (function(superClass) {
     if (options == null) {
       options = {};
     }
-    this.createShape = bind(this.createShape, this);
+    this.addShape = bind(this.addShape, this);
+    this.shapes = [];
     LayerSVG.__super__.constructor.call(this, options);
-    this.html = "<svg id='svg' width='" + this.width + "' height='" + this.height + "'>/<svg>";
-    this.svg = this.querySelector("#svg");
+    this.html = "<svg id='" + options.id + "' width='" + this.width + "' height='" + this.height + "'>/<svg>";
+    this.svg = this.querySelector("#" + options.id);
   }
 
-  LayerSVG.prototype.createShape = function(type, options) {
-    var circle, ellipse, line, path, polygon, rect, shape;
+  LayerSVG.prototype.addShape = function(type, options) {
+    var option, shape, value;
     if (options == null) {
       options = {};
     }
-    return shape = (function() {
-      switch (false) {
-        case type !== "rect":
-          rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-          rect.setAttributeNS(null, "x", "" + options.x);
-          rect.setAttributeNS(null, "y", "" + options.y);
-          rect.setAttributeNS(null, "width", "" + options.width);
-          rect.setAttributeNS(null, "height", "" + options.height);
-          return this.svg.appendChild(rect);
-        case type !== "circle":
-          circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-          circle.setAttributeNS(null, "cx", "" + options.x);
-          circle.setAttributeNS(null, "cy", "" + options.y);
-          circle.setAttributeNS(null, "r", "" + options.radius);
-          return this.svg.appendChild(circle);
-        case type !== "ellipse":
-          ellipse = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
-          ellipse.setAttributeNS(null, "cx", "" + options.x);
-          ellipse.setAttributeNS(null, "cy", "" + options.y);
-          ellipse.setAttributeNS(null, "rx", "" + options.radiusHorizontal);
-          ellipse.setAttributeNS(null, "ry", "" + options.radiusVertical);
-          return this.svg.appendChild(ellipse);
-        case type !== "line":
-          line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-          line.setAttributeNS(null, "x1", "" + options.x);
-          line.setAttributeNS(null, "y1", "" + options.y);
-          line.setAttributeNS(null, "x2", "" + options.x2);
-          line.setAttributeNS(null, "y2", "" + options.y2);
-          line.setAttributeNS(null, "stroke", "black");
-          return this.svg.appendChild(line);
-        case type !== "polygon":
-          polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-          polygon.setAttributeNS(null, "points", "" + options.points);
-          return this.svg.appendChild(polygon);
-        case type !== "path":
-          path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-          path.setAttributeNS(null, "d", "" + options.path);
-          return this.svg.appendChild(path);
-      }
-    }).call(this);
+    shape = document.createElementNS("http://www.w3.org/2000/svg", "" + type);
+    for (option in options) {
+      if (!hasProp.call(options, option)) continue;
+      value = options[option];
+      shape.setAttributeNS(null, "" + option, "" + options[option]);
+    }
+    this.svg.appendChild(shape);
+    this.shapes.push(shape);
+    return shape;
   };
 
   return LayerSVG;
