@@ -53,7 +53,7 @@ exports.LayerSVG = (function(superClass) {
     return defs.appendChild(mask);
   };
 
-  LayerSVG.prototype.addToMask = function(id, element) {
+  LayerSVG.prototype.addToMask = function(id, element, prevElement) {
     var mask;
     if (typeof id !== "string") {
       id = id.getAttributeNS(null, "id");
@@ -62,7 +62,11 @@ exports.LayerSVG = (function(superClass) {
       id = this.svg.getElementById("" + id);
       mask = id;
     }
-    return mask.appendChild(element);
+    if (!prevElement) {
+      return mask.appendChild(element);
+    } else {
+      return mask.insertBefore(element, prevElement);
+    }
   };
 
   LayerSVG.prototype.mask = function(element, id) {

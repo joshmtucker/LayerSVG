@@ -36,7 +36,7 @@ class exports.LayerSVG extends Layer
 		defs = @.svg.getElementsByTagName("defs")[0]
 		defs.appendChild(mask)
 
-	addToMask: (id, element) ->
+	addToMask: (id, element, prevElement) ->
 		if typeof(id) isnt "string"
 			id = id.getAttributeNS(null, "id")
 			mask = @.svg.getElementById("#{id}")
@@ -44,7 +44,10 @@ class exports.LayerSVG extends Layer
 			id = @.svg.getElementById("#{id}")
 			mask = id
 
-		mask.appendChild(element)
+		if !prevElement
+			mask.appendChild(element)
+		else
+			mask.insertBefore(element, prevElement)
 
 	mask: (element, id) ->
 		if typeof(id) isnt "string"
