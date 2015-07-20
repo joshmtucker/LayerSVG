@@ -3,56 +3,52 @@ class exports.LayerSVG extends Layer
 		
 		super options
 
-		@.html = "<svg id='svg' width='#{@.width}' height='#{@.height}'>/<svg>"
-		@.svg = @.querySelector("#svg")
+		@shapes = {}
+		@masks = {}
+		@html = "<svg id='#{options.id}' width='#{@.width}' height='#{@.height}'><defs></defs></svg>"
+		@svg = @.querySelector("##{options.id}")	
 
-	createShape: (type, options={}) =>
-		shape = switch
-			when type is "rect" 
-				rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
-				rect.setAttributeNS(null, "x", "#{options.x}")
-				rect.setAttributeNS(null, "y", "#{options.y}")
-				rect.setAttributeNS(null, "width", "#{options.width}")
-				rect.setAttributeNS(null, "height", "#{options.height}")
 
-				@.svg.appendChild(rect)
+	addShape: (options={}) ->
 
-			when type is "circle"
-				circle = document.createElementNS("http://www.w3.org/2000/svg", "circle")
-				circle.setAttributeNS(null, "cx", "#{options.x}")
-				circle.setAttributeNS(null, "cy", "#{options.y}")
-				circle.setAttributeNS(null, "r", "#{options.radius}")
+		if options.shape is "rectangle"
+			options.shape = "rect"
 
-				@.svg.appendChild(circle)
+		shape = document.createElementNS("http://www.w3.org/2000/svg", "#{options.shape}") 
 
-			when type is "ellipse"
-				ellipse = document.createElementNS("http://www.w3.org/2000/svg", "ellipse")
-				ellipse.setAttributeNS(null, "cx", "#{options.x}")
-				ellipse.setAttributeNS(null, "cy", "#{options.y}")
-				ellipse.setAttributeNS(null, "rx", "#{options.radiusHorizontal}")
-				ellipse.setAttributeNS(null, "ry", "#{options.radiusVertical}")
+		for own option, value of options
+			if option isnt "shape"
+				shape.setAttributeNS(null, "#{option}", "#{options[option]}")
 
-				@.svg.appendChild(ellipse)
+		@svg.appendChild(shape)
+		@shapes["#{options.id}"] = shape
 
-			when type is "line"
-				line = document.createElementNS("http://www.w3.org/2000/svg", "line")
-				line.setAttributeNS(null, "x1", "#{options.x}")
-				line.setAttributeNS(null, "y1", "#{options.y}")
-				line.setAttributeNS(null, "x2", "#{options.x2}")
-				line.setAttributeNS(null, "y2", "#{options.y2}")
-				line.setAttributeNS(null, "stroke", "black")
+		return shape
 
-				@.svg.appendChild(line)
+	addMask: (id, shapes) ->
+		mask = document.createElementNS("http://www.w3.org/2000/svg", "mask")
+		mask.setAttributeNS(null, "id", "#{id}")
 
-			when type is "polygon"
-				polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon")
-				polygon.setAttributeNS(null, "points", "#{options.points}")
+		if shapes isnt undefined
+			for shape in shapes when shapes
+				mask.appendChild(shape)
 
-				@.svg.appendChild(polygon)
+		defs = @.svg.getElementsByTagName("defs")[0]
+		defs.appendChild(mask)
 
-			when type is "path"
-				path = document.createElementNS("http://www.w3.org/2000/svg", "path")
-				path.setAttributeNS(null, "d", "#{options.path}")
+	addToMask: (id, element) ->
+		if typeof(id) isnt "string"
+			id = id.getAttributeNS(null, "id")
+			mask = @.svg.getElementById("#{id}")
+		else 
+			id = @.svg.getElementById("#{id}")
+			mask = id
 
-				@.svg.appendChild(path)
+		mask.appendChild(element)
 
+	mask: (element, id) ->
+		if typeof(id) isnt "string"
+			id = id.getAttributeNS(null, "id")
+
+		element.setAttributeNS(null, "mask", "url(##{id})")
+		

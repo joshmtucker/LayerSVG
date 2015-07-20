@@ -1,27 +1,51 @@
 {LayerSVG} = require "LayerSVG"
 
-# Create SVG layer
-svg = new LayerSVG height: 900, width: 900
+background = new BackgroundLayer backgroundColor: Framer.Defaults.Layer.backgroundColor
 
-# ––– Basic shapes
-# Rectangle
-rect = svg.createShape "rect", x: 10, y: 10, width: 100, height: 100
+# Create SVG Layer
 
-# Circle
-circle = svg.createShape "circle", x: 100, y: 200, radius: 40
+SVGLayer = new LayerSVG width: 200, height: 200, id: "SVGLayer", backgroundColor: "transparent"
+SVGLayer.center()
 
-# Ellipse
-ellipse = svg.createShape "ellipse", x: 200, y: 100, radiusHorizontal: 50, radiusVertical: 30
+# Add Shapes
+square = SVGLayer.addShape
+	shape: "rectangle"
+	x: 0
+	y: 0
+	width: 200
+	height: 200
+	id: "square"
+	fill: "red"
+	
+outerSquare = SVGLayer.addShape
+	x: 0
+	y: 0
+	width: 200
+	height: 200
+	shape: "rectangle"
+	id: "outerSquare"
+	fill: "white"
 
-# Line
-line = svg.createShape "line", x: 20, y: 350, x2: 300, y2: 350
+innerCircle = SVGLayer.addShape
+	shape: "circle"
+	cx: square.getAttributeNS(null, "width")/2
+	cy: square.getAttributeNS(null, "height")/2
+	r: 40
+	id: "innerCircle"
+	fill: "white"
+	
+innerSquare = SVGLayer.addShape
+	shape: "rectangle"
+	x: 20
+	y: 20
+	width: 200 - 40
+	height: 200 - 40
+	id: "innerSquare"
+	
+circleMask = SVGLayer.addMask("circleMask", [outerSquare, innerSquare])
 
-# Polygon
-polygon = svg.createShape "polygon", points: "200,10 250,190 160,210"
+SVGLayer.mask(square, circleMask)
 
-# <-- Add support for polyline
+SVGLayer.addToMask(circleMask, innerCircle)
 
-# Path
-path = svg.createShape "path", path: "M450 0 L75 200 L225 200 Z"
-
-
+print SVGLayer.html
