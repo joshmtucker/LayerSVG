@@ -16,37 +16,56 @@ exports.LayerSVG = (function(superClass) {
     this.svg = this.querySelector("#" + options.id);
   }
 
-  LayerSVG.prototype.addShape = function(type, options) {
+  LayerSVG.prototype.addShape = function(options) {
     var option, shape, value;
     if (options == null) {
       options = {};
     }
-    shape = document.createElementNS("http://www.w3.org/2000/svg", "" + type);
+    if (options.shape === "rectangle") {
+      options.shape = "rect";
+    }
+    shape = document.createElementNS("http://www.w3.org/2000/svg", "" + options.shape);
     for (option in options) {
       if (!hasProp.call(options, option)) continue;
       value = options[option];
-      shape.setAttributeNS(null, "" + option, "" + options[option]);
+      if (option !== "shape") {
+        shape.setAttributeNS(null, "" + option, "" + options[option]);
+      }
     }
     this.svg.appendChild(shape);
     this.shapes["" + options.id] = shape;
     return shape;
   };
 
-  LayerSVG.prototype.addMask = function(id) {
-    var defs, mask;
+  LayerSVG.prototype.addMask = function(id, shapes) {
+    var defs, i, len, mask, shape;
     mask = document.createElementNS("http://www.w3.org/2000/svg", "mask");
     mask.setAttributeNS(null, "id", "" + id);
+    if (shapes !== void 0) {
+      for (i = 0, len = shapes.length; i < len; i++) {
+        shape = shapes[i];
+        if (shapes) {
+          mask.appendChild(shape);
+        }
+      }
+    }
     defs = this.svg.getElementsByTagName("defs")[0];
     return defs.appendChild(mask);
   };
 
-  LayerSVG.prototype.addToMask = function(element, id) {
+  LayerSVG.prototype.addToMask = function(id, element) {
     var mask;
-    mask = this.svg.getElementById("" + id);
+    if (typeof id !== "string") {
+      id = id.getAttributeNS(null, "id");
+      mask = this.svg.getElementById("" + id);
+    } else {
+      id = this.svg.getElementById("" + id);
+      mask = id;
+    }
     return mask.appendChild(element);
   };
 
-  LayerSVG.prototype.setMask = function(element, id) {
+  LayerSVG.prototype.mask = function(element, id) {
     if (typeof id !== "string") {
       id = id.getAttributeNS(null, "id");
     }

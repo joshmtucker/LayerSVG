@@ -1,24 +1,51 @@
 {LayerSVG} = require "LayerSVG"
 
-background = new BackgroundLayer
+background = new BackgroundLayer backgroundColor: Framer.Defaults.Layer.backgroundColor
 
-# Create SVG layer
-SVG = new LayerSVG height: 200, width: 200, id: "square", backgroundColor: "transparent"
+# Create SVG Layer
 
-mask = SVG.addMask "strokeSquare"
+SVGLayer = new LayerSVG width: 200, height: 200, id: "SVGLayer", backgroundColor: "transparent"
+SVGLayer.center()
 
-square = SVG.addShape "rect",
-	x: 10 
-	y: 20 
-	width: 100 
-	height: 100 
+# Add Shapes
+square = SVGLayer.addShape
+	shape: "rectangle"
+	x: 0
+	y: 0
+	width: 200
+	height: 200
 	id: "square"
+	fill: "red"
+	
+outerSquare = SVGLayer.addShape
+	x: 0
+	y: 0
+	width: 200
+	height: 200
+	shape: "rectangle"
+	id: "outerSquare"
+	fill: "white"
 
-outer = SVG.addShape "rect", x: 10, y: 20, width: 100, height: 100, id: "outer", fill: "white"
+innerCircle = SVGLayer.addShape
+	shape: "circle"
+	cx: square.getAttributeNS(null, "width")/2
+	cy: square.getAttributeNS(null, "height")/2
+	r: 40
+	id: "innerCircle"
+	fill: "white"
+	
+innerSquare = SVGLayer.addShape
+	shape: "rectangle"
+	x: 20
+	y: 20
+	width: 200 - 40
+	height: 200 - 40
+	id: "innerSquare"
+	
+circleMask = SVGLayer.addMask("circleMask", [outerSquare, innerSquare])
 
-inner = SVG.addShape "rect", x: 35, y: 45, width: 50, height: 50, id: "inner"
+SVGLayer.mask(square, circleMask)
 
-SVG.addToMask(outer, "strokeSquare")
-SVG.addToMask(inner, "strokeSquare")
+SVGLayer.addToMask(circleMask, innerCircle)
 
-SVG.setMask(square, mask)
+print SVGLayer.html

@@ -9,28 +9,44 @@ class exports.LayerSVG extends Layer
 		@svg = @.querySelector("##{options.id}")	
 
 
-	addShape: (type, options={}) ->
-		shape = document.createElementNS("http://www.w3.org/2000/svg", "#{type}")
+	addShape: (options={}) ->
+
+		if options.shape is "rectangle"
+			options.shape = "rect"
+
+		shape = document.createElementNS("http://www.w3.org/2000/svg", "#{options.shape}") 
+
 		for own option, value of options
-			shape.setAttributeNS(null, "#{option}", "#{options[option]}")
+			if option isnt "shape"
+				shape.setAttributeNS(null, "#{option}", "#{options[option]}")
 
 		@svg.appendChild(shape)
 		@shapes["#{options.id}"] = shape
 
 		return shape
 
-	addMask: (id) ->
+	addMask: (id, shapes) ->
 		mask = document.createElementNS("http://www.w3.org/2000/svg", "mask")
 		mask.setAttributeNS(null, "id", "#{id}")
+
+		if shapes isnt undefined
+			for shape in shapes when shapes
+				mask.appendChild(shape)
 
 		defs = @.svg.getElementsByTagName("defs")[0]
 		defs.appendChild(mask)
 
-	addToMask: (element, id) ->
-		mask = @.svg.getElementById("#{id}")
+	addToMask: (id, element) ->
+		if typeof(id) isnt "string"
+			id = id.getAttributeNS(null, "id")
+			mask = @.svg.getElementById("#{id}")
+		else 
+			id = @.svg.getElementById("#{id}")
+			mask = id
+
 		mask.appendChild(element)
 
-	setMask: (element, id) ->
+	mask: (element, id) ->
 		if typeof(id) isnt "string"
 			id = id.getAttributeNS(null, "id")
 
