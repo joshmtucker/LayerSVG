@@ -42,10 +42,10 @@ innerSquare = SVGLayer.addShape
 	height: 200 - 40
 	id: "innerSquare"
 	
-circleMask = SVGLayer.addMask("circleMask", [outerSquare, innerCircle])
+circleMask = SVGLayer.addMask("circleMask", ["outerSquare", "innerSquare"])
 
 SVGLayer.mask(square, circleMask)
 
-SVGLayer.addToMask(circleMask, innerSquare, innerCircle)
+#SVGLayer.addToMask("inner", circleMask, innerCircle)
 
 print SVGLayer.html

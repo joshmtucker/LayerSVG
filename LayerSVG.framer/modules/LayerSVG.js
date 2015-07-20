@@ -37,36 +37,41 @@ exports.LayerSVG = (function(superClass) {
     return shape;
   };
 
-  LayerSVG.prototype.addMask = function(id, shapes) {
-    var defs, i, len, mask, shape;
+  LayerSVG.prototype.addMask = function(id, shape) {
+    var defs, element, i, len, mask;
     mask = document.createElementNS("http://www.w3.org/2000/svg", "mask");
     mask.setAttributeNS(null, "id", "" + id);
-    if (shapes !== void 0) {
-      for (i = 0, len = shapes.length; i < len; i++) {
-        shape = shapes[i];
-        if (shapes) {
-          mask.appendChild(shape);
+    if (!Array.isArray(shape)) {
+      if (typeof shape === "string") {
+        shape = this.svg.getElementById("" + shape);
+        mask.appendChild(shape);
+      } else {
+        mask.appendChild(shape);
+      }
+    } else {
+      for (i = 0, len = shape.length; i < len; i++) {
+        element = shape[i];
+        if (typeof element === "string") {
+          element = this.svg.getElementById("" + element);
+          mask.appendChild(element);
+        } else {
+          mask.appendChild(element);
         }
       }
     }
     defs = this.svg.getElementsByTagName("defs")[0];
     defs.appendChild(mask);
-    return this.masks["" + options.id] = mask;
+    return this.masks["" + id] = mask;
   };
 
-  LayerSVG.prototype.addToMask = function(id, element, prevElement) {
-    var mask;
-    if (typeof id !== "string") {
-      id = id.getAttributeNS(null, "id");
-      mask = this.svg.getElementById("" + id);
-    } else {
-      id = this.svg.getElementById("" + id);
-      mask = id;
+  LayerSVG.prototype.addToMask = function(shape, mask, prevElement) {
+    if (typeof mask === "string") {
+      mask = this.svg.getElementById("" + mask);
     }
     if (!prevElement) {
-      return mask.appendChild(element);
+      return mask.appendChild(shape);
     } else {
-      return mask.insertBefore(element, prevElement);
+      return mask.insertBefore(shape, prevElement);
     }
   };
 

@@ -25,30 +25,36 @@ class exports.LayerSVG extends Layer
 
 		return shape
 
-	addMask: (id, shapes) ->
+	addMask: (id, shape) ->
 		mask = document.createElementNS("http://www.w3.org/2000/svg", "mask")
 		mask.setAttributeNS(null, "id", "#{id}")
 
-		if shapes isnt undefined
-			for shape in shapes when shapes
+		if !Array.isArray(shape)
+			if typeof(shape) is "string"
+				shape = @.svg.getElementById("#{shape}")
 				mask.appendChild(shape)
+			else
+				mask.appendChild(shape)
+		else
+			for element in shape 
+				if typeof(element) is "string"
+					element = @.svg.getElementById("#{element}")
+					mask.appendChild(element)
+				else
+					mask.appendChild(element)
 
 		defs = @.svg.getElementsByTagName("defs")[0]
 		defs.appendChild(mask)
-		@masks["#{options.id}"] = mask
+		@masks["#{id}"] = mask
 
-	addToMask: (id, element, prevElement) ->
-		if typeof(id) isnt "string"
-			id = id.getAttributeNS(null, "id")
-			mask = @.svg.getElementById("#{id}")
-		else 
-			id = @.svg.getElementById("#{id}")
-			mask = id
+	addToMask: (shape, mask, prevElement) ->
+		if typeof(mask) is "string"
+			mask = @.svg.getElementById("#{mask}")
 
 		if !prevElement
-			mask.appendChild(element)
+			mask.appendChild(shape)
 		else
-			mask.insertBefore(element, prevElement)
+			mask.insertBefore(shape, prevElement)
 
 	mask: (element, id) ->
 		if typeof(id) isnt "string"
