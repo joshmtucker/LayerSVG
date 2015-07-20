@@ -3,8 +3,8 @@
 background = new BackgroundLayer
 
 # Create SVG layer
-circle = new LayerSVG height: 200, width: 200, name: "circle"
+SVG = new LayerSVG height: 200, width: 200, id: "square"
 
-test = circle.addShape "rect", x: 10, y: 20, width: 100, height: 100, id: "hello"
+test = SVG.addShape "rect", x: 10, y: 20, width: 100, height: 100, id: "hello"
 
-test2 = circle.addShape "rect", x: 10, y: 20, width: 100, height: 100, id: "hello2"
+test2 = SVG.addShape "rect", x: 10, y: 20, width: 100, height: 100, id: "hello2"

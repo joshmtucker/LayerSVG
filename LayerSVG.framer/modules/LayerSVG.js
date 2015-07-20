@@ -11,10 +11,10 @@ exports.LayerSVG = (function(superClass) {
       options = {};
     }
     this.addShape = bind(this.addShape, this);
-    this.shapes = {};
     LayerSVG.__super__.constructor.call(this, options);
+    this.shapes = {};
     this.html = "<svg id='" + options.id + "' width='" + this.width + "' height='" + this.height + "'>/<svg>";
-    this.svg = this.querySelector("#" + options.id);
+    this.element = this.querySelector("#" + options.id);
   }
 
   LayerSVG.prototype.addShape = function(type, options) {
@@ -28,7 +28,7 @@ exports.LayerSVG = (function(superClass) {
       value = options[option];
       shape.setAttributeNS(null, "" + option, "" + options[option]);
     }
-    this.svg.appendChild(shape);
+    this.element.appendChild(shape);
     this.shapes["" + options.id] = shape;
     return shape;
   };

@@ -1,12 +1,11 @@
 class exports.LayerSVG extends Layer 
 	constructor: (options={}) ->
-
-		@.shapes = {}
 		
 		super options
 
-		@.html = "<svg id='#{options.id}' width='#{@.width}' height='#{@.height}'>/<svg>"
-		@.svg = @.querySelector("##{options.id}")	
+		@shapes = {}
+		@html = "<svg id='#{options.id}' width='#{@.width}' height='#{@.height}'>/<svg>"
+		@element = @.querySelector("##{options.id}")	
 
 
 	addShape: (type, options={}) =>
@@ -14,7 +13,7 @@ class exports.LayerSVG extends Layer
 		for own option, value of options
 			shape.setAttributeNS(null, "#{option}", "#{options[option]}")
 
-		@.svg.appendChild(shape)
-		@.shapes["#{options.id}"] = shape
+		@element.appendChild(shape)
+		@shapes["#{options.id}"] = shape
 
 		return shape
