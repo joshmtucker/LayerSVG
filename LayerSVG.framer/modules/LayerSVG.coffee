@@ -51,7 +51,6 @@ class exports.LayerSVG extends Layer
 	addToMask: (shapes, mask, prevShape) ->
 		if !Array.isArray(shapes)
 			shape = shapes
-			
 			if typeof(shape) is "string"
 				shape = @.svg.getElementById("#{shape}")
 
@@ -64,11 +63,11 @@ class exports.LayerSVG extends Layer
 
 				_insertBefore(shape, mask, prevShape)
 
-	mask: (element, id) ->
-		if typeof(id) isnt "string"
-			id = id.getAttributeNS(null, "id")
+	mask: (shape, mask) ->
+		if typeof(mask) isnt "string"
+			mask = mask.getAttributeNS(null, "id")
 
-		element.setAttributeNS(null, "mask", "url(##{id})")
+		shape.setAttributeNS(null, "mask", "url(##{mask})")
 
 	_insertBefore = (shape, mask, prevShape) ->
 		if !prevShape

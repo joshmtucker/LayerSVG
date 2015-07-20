@@ -89,11 +89,11 @@ exports.LayerSVG = (function(superClass) {
     }
   };
 
-  LayerSVG.prototype.mask = function(element, id) {
-    if (typeof id !== "string") {
-      id = id.getAttributeNS(null, "id");
+  LayerSVG.prototype.mask = function(shape, mask) {
+    if (typeof mask !== "string") {
+      mask = mask.getAttributeNS(null, "id");
     }
-    return element.setAttributeNS(null, "mask", "url(#" + id + ")");
+    return shape.setAttributeNS(null, "mask", "url(#" + mask + ")");
   };
 
   _insertBefore = function(shape, mask, prevShape) {

@@ -1,51 +1,74 @@
 {LayerSVG} = require "LayerSVG"
 
-background = new BackgroundLayer backgroundColor: Framer.Defaults.Layer.backgroundColor
+background = new BackgroundLayer backgroundColor: "#444444"
 
-# Create SVG Layer
+# IMPORTANT: Give all your elements id values
 
-SVGLayer = new LayerSVG width: 200, height: 200, id: "SVGLayer", backgroundColor: "transparent"
-SVGLayer.center()
+# Create an SVG Layer
+# A LayerSVG serves as a container for
+# elements such as shapes and masks
 
-# Add Shapes
-square = SVGLayer.addShape
-	shape: "rectangle"
-	x: 0
-	y: 0
-	width: 200
-	height: 200
-	id: "square"
-	fill: "red"
-	
-outerSquare = SVGLayer.addShape
-	x: 0
-	y: 0
-	width: 200
-	height: 200
-	shape: "rectangle"
-	id: "outerSquare"
+instagramIcon = new LayerSVG width: 400, height: 400, id: "instagramIcon"
+instagramIcon.center()
+
+# Create shapes
+# Property values below are as defined for SVG shapes
+# You can add any property you want as long as it matches standard SVG attributes
+# Property "shape" is an added property to specify the shape type on creating the SVG element
+
+icon = instagramIcon.addShape
+	shape: "rect"
+	x: 100
+	y: 100
+	rx: 18
+	ry: 18
+	width: instagramIcon.width/2
+	height: instagramIcon.height/2
 	fill: "white"
-
-innerCircle = SVGLayer.addShape
+	id: "icon"
+	
+iconMask = instagramIcon.addShape
+	shape: "rect"
+	x: 100
+	y: 100
+	rx: 18
+	ry: 18
+	width: instagramIcon.width/2
+	height: instagramIcon.height/2
+	fill: "white"
+	id: "iconMask"
+	
+innerLense = instagramIcon.addShape
 	shape: "circle"
-	cx: square.getAttributeNS(null, "width")/2
-	cy: square.getAttributeNS(null, "height")/2
-	r: 40
-	id: "innerCircle"
+	cx: instagramIcon.width/2
+	cy: instagramIcon.height/2
+	r: 45
 	fill: "white"
+	id: "innerLense"
 	
-innerSquare = SVGLayer.addShape
-	shape: "rectangle"
-	x: 20
-	y: 20
-	width: 200 - 40
-	height: 200 - 40
-	id: "innerSquare"
+# Add mask
+# First property is the id of the mask you are creating
+# You can pass in one shape for this mask or an array of shapes. Note that I can reference a shape either by a local reference or the ID set
+# Order of shapes in the array is important with multiple
+# NOTE: the fill color of a shape that is inside a mask is important. White = anything inside that shape stays, Black = goes away with mask
+
+lenseMask = instagramIcon.addMask("lenseMask", [iconMask, "innerLense"])
+
+# Apply mask
+instagramIcon.mask(icon, "lenseMask")
+
+# addToMask
+# Add shapes later into an existing mask
+# Work-in-progress
+
+outerLense = instagramIcon.addShape
+	shape: "circle"
+	cx: instagramIcon.width/2
+	cy: instagramIcon.height/2
+	r: 60
+	id: "outerLense"
 	
-circleMask = SVGLayer.addMask("circleMask", ["outerSquare", "innerSquare"])
+instagramIcon.addToMask(outerLense, lenseMask, innerLense)
+	
 
-SVGLayer.mask(square, circleMask)
-
-SVGLayer.addToMask("innerCircle", circleMask)
-
-print SVGLayer.html
+	
