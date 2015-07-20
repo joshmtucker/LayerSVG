@@ -50,7 +50,8 @@ exports.LayerSVG = (function(superClass) {
       }
     }
     defs = this.svg.getElementsByTagName("defs")[0];
-    return defs.appendChild(mask);
+    defs.appendChild(mask);
+    return this.masks["" + options.id] = mask;
   };
 
   LayerSVG.prototype.addToMask = function(id, element, prevElement) {

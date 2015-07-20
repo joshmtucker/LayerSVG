@@ -35,6 +35,7 @@ class exports.LayerSVG extends Layer
 
 		defs = @.svg.getElementsByTagName("defs")[0]
 		defs.appendChild(mask)
+		@masks["#{options.id}"] = mask
 
 	addToMask: (id, element, prevElement) ->
 		if typeof(id) isnt "string"
