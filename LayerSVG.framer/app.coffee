@@ -46,6 +46,6 @@ circleMask = SVGLayer.addMask("circleMask", ["outerSquare", "innerSquare"])
 
 SVGLayer.mask(square, circleMask)
 
-#SVGLayer.addToMask("inner", circleMask, innerCircle)
+SVGLayer.addToMask("innerCircle", circleMask)
 
 print SVGLayer.html

@@ -25,40 +25,57 @@ class exports.LayerSVG extends Layer
 
 		return shape
 
-	addMask: (id, shape) ->
+	addMask: (id, shapes) ->
 		mask = document.createElementNS("http://www.w3.org/2000/svg", "mask")
 		mask.setAttributeNS(null, "id", "#{id}")
 
-		if !Array.isArray(shape)
+		if !Array.isArray(shapes)
+			shape = shapes
 			if typeof(shape) is "string"
 				shape = @.svg.getElementById("#{shape}")
 				mask.appendChild(shape)
 			else
 				mask.appendChild(shape)
 		else
-			for element in shape 
-				if typeof(element) is "string"
-					element = @.svg.getElementById("#{element}")
-					mask.appendChild(element)
+			for shape in shapes 
+				if typeof(shape) is "string"
+					shape = @.svg.getElementById("#{shape}")
+					mask.appendChild(shape)
 				else
-					mask.appendChild(element)
+					mask.appendChild(shape)
 
 		defs = @.svg.getElementsByTagName("defs")[0]
 		defs.appendChild(mask)
 		@masks["#{id}"] = mask
 
-	addToMask: (shape, mask, prevElement) ->
-		if typeof(mask) is "string"
-			mask = @.svg.getElementById("#{mask}")
+	addToMask: (shapes, mask, prevShape) ->
+		if !Array.isArray(shapes)
+			shape = shapes
+			
+			if typeof(shape) is "string"
+				shape = @.svg.getElementById("#{shape}")
 
-		if !prevElement
-			mask.appendChild(shape)
+			_insertBefore(shape, mask, prevShape)
 		else
-			mask.insertBefore(shape, prevElement)
+			for shape in shapes
+				print shape
+				if typeof(shape) is "string"
+					shape = @.svg.getElementById("#{element}")
+
+				_insertBefore(shape, mask, prevShape)
 
 	mask: (element, id) ->
 		if typeof(id) isnt "string"
 			id = id.getAttributeNS(null, "id")
 
 		element.setAttributeNS(null, "mask", "url(##{id})")
+
+	_insertBefore = (shape, mask, prevShape) ->
+		if !prevShape
+			mask.appendChild(shape)
+		else 
+			if typeof(prevShape) is "string"
+				prevShape = @.svg.getElementById("#{prevShape}")
+
+			mask.insertBefore(shape, prevShape)
 		
