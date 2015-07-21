@@ -3,22 +3,18 @@ class exports.LayerSVG extends Layer
 		
 		super options
 
-		@shapes = {}
-		@masks = {}
 		@html = "<svg id='#{options.id}' width='#{@.width}' height='#{@.height}'><defs></defs></svg>"
 		@svg = @.querySelector("##{options.id}")	
 
+		@shapes = {}
+		@masks = {}
 
 	addShape: (options={}) ->
-
-		if options.shape is "rectangle"
-			options.shape = "rect"
-
 		shape = document.createElementNS("http://www.w3.org/2000/svg", "#{options.shape}") 
 
 		for own option, value of options
-			if option isnt "shape"
-				shape.setAttributeNS(null, "#{option}", "#{options[option]}")
+				if option isnt "shape"
+					shape.setAttributeNS(null, "#{option}", "#{options[option]}")
 
 		@svg.appendChild(shape)
 		@shapes["#{options.id}"] = shape
@@ -29,26 +25,54 @@ class exports.LayerSVG extends Layer
 		mask = document.createElementNS("http://www.w3.org/2000/svg", "mask")
 		mask.setAttributeNS(null, "id", "#{id}")
 
-		if shapes isnt undefined
-			for shape in shapes when shapes
+		if !Array.isArray(shapes)
+			shape = shapes
+
+			if typeof(shape) is "string"
+				shape = @.svg.getElementById("#{shape}")
+			
+			mask.appendChild(shape)
+		
+		else
+			for shape in shapes 
+				if typeof(shape) is "string"
+					shape = @.svg.getElementById("#{shape}")
+				
 				mask.appendChild(shape)
 
 		defs = @.svg.getElementsByTagName("defs")[0]
 		defs.appendChild(mask)
+		@masks["#{id}"] = mask
 
-	addToMask: (id, element) ->
-		if typeof(id) isnt "string"
-			id = id.getAttributeNS(null, "id")
-			mask = @.svg.getElementById("#{id}")
-		else 
-			id = @.svg.getElementById("#{id}")
-			mask = id
+	addToMask: (shapes, mask, prevShape) ->
+		if typeof(mask) is "string"
+			mask = @.svg.getElementById("#{mask}")
 
-		mask.appendChild(element)
+		if !Array.isArray(shapes)
+			shape = shapes
+			if typeof(shape) is "string"
+				shape = @.svg.getElementById("#{shape}")
 
-	mask: (element, id) ->
-		if typeof(id) isnt "string"
-			id = id.getAttributeNS(null, "id")
+			if !prevShape
+				mask.appendChild(shape)
+			else
+				mask.insertBefore(shape, prevShape)
 
-		element.setAttributeNS(null, "mask", "url(##{id})")
-		
+		else
+			for shape in shapes
+				if typeof(shape) is "string"
+					shape = @.svg.getElementById("#{shape}")
+
+				if !prevShape
+					mask.appendChild(shape)
+				else
+					mask.insertBefore(shape, prevShape)
+
+	mask: (shape, mask) ->
+		if typeof(shape) is "string"
+			shape = @.svg.getElementById("#{shape}")
+
+		if typeof(mask) isnt "string"
+			mask = mask.getAttributeNS(null, "id")
+
+		shape.setAttributeNS(null, "mask", "url(##{mask})")

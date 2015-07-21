@@ -10,19 +10,16 @@ exports.LayerSVG = (function(superClass) {
       options = {};
     }
     LayerSVG.__super__.constructor.call(this, options);
-    this.shapes = {};
-    this.masks = {};
     this.html = "<svg id='" + options.id + "' width='" + this.width + "' height='" + this.height + "'><defs></defs></svg>";
     this.svg = this.querySelector("#" + options.id);
+    this.shapes = {};
+    this.masks = {};
   }
 
   LayerSVG.prototype.addShape = function(options) {
     var option, shape, value;
     if (options == null) {
       options = {};
-    }
-    if (options.shape === "rectangle") {
-      options.shape = "rect";
     }
     shape = document.createElementNS("http://www.w3.org/2000/svg", "" + options.shape);
     for (option in options) {
@@ -41,35 +38,66 @@ exports.LayerSVG = (function(superClass) {
     var defs, i, len, mask, shape;
     mask = document.createElementNS("http://www.w3.org/2000/svg", "mask");
     mask.setAttributeNS(null, "id", "" + id);
-    if (shapes !== void 0) {
+    if (!Array.isArray(shapes)) {
+      shape = shapes;
+      if (typeof shape === "string") {
+        shape = this.svg.getElementById("" + shape);
+      }
+      mask.appendChild(shape);
+    } else {
       for (i = 0, len = shapes.length; i < len; i++) {
         shape = shapes[i];
-        if (shapes) {
-          mask.appendChild(shape);
+        if (typeof shape === "string") {
+          shape = this.svg.getElementById("" + shape);
         }
+        mask.appendChild(shape);
       }
     }
     defs = this.svg.getElementsByTagName("defs")[0];
-    return defs.appendChild(mask);
+    defs.appendChild(mask);
+    return this.masks["" + id] = mask;
   };
 
-  LayerSVG.prototype.addToMask = function(id, element) {
-    var mask;
-    if (typeof id !== "string") {
-      id = id.getAttributeNS(null, "id");
-      mask = this.svg.getElementById("" + id);
+  LayerSVG.prototype.addToMask = function(shapes, mask, prevShape) {
+    var i, len, results, shape;
+    if (typeof mask === "string") {
+      mask = this.svg.getElementById("" + mask);
+    }
+    if (!Array.isArray(shapes)) {
+      shape = shapes;
+      if (typeof shape === "string") {
+        shape = this.svg.getElementById("" + shape);
+      }
+      if (!prevShape) {
+        return mask.appendChild(shape);
+      } else {
+        return mask.insertBefore(shape, prevShape);
+      }
     } else {
-      id = this.svg.getElementById("" + id);
-      mask = id;
+      results = [];
+      for (i = 0, len = shapes.length; i < len; i++) {
+        shape = shapes[i];
+        if (typeof shape === "string") {
+          shape = this.svg.getElementById("" + shape);
+        }
+        if (!prevShape) {
+          results.push(mask.appendChild(shape));
+        } else {
+          results.push(mask.insertBefore(shape, prevShape));
+        }
+      }
+      return results;
     }
-    return mask.appendChild(element);
   };
 
-  LayerSVG.prototype.mask = function(element, id) {
-    if (typeof id !== "string") {
-      id = id.getAttributeNS(null, "id");
+  LayerSVG.prototype.mask = function(shape, mask) {
+    if (typeof shape === "string") {
+      shape = this.svg.getElementById("" + shape);
     }
-    return element.setAttributeNS(null, "mask", "url(#" + id + ")");
+    if (typeof mask !== "string") {
+      mask = mask.getAttributeNS(null, "id");
+    }
+    return shape.setAttributeNS(null, "mask", "url(#" + mask + ")");
   };
 
   return LayerSVG;
