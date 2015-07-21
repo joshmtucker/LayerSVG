@@ -102,6 +102,20 @@ grid.addDef
 	id: "clipPath"
 	
 grid.clipPath("background", "clipPath")
+
+iconMaskAnimation = instagramIcon.addAnimation
+	shape: innerLense
+	attributeType: "XML"
+	attributeName: "r"
+	dur: ".5s"
+	keyTimes: "0; 1"
+	calcMode: "spline"
+	keySplines: ".42,0,.58,1"
+	values: "45;35"
+	repeatCount: "2"
+	id: "animation"
+	
+print instagramIcon.html
 	
 
 

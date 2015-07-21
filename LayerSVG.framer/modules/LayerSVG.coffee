@@ -61,6 +61,16 @@ class exports.LayerSVG extends Layer
 				else
 					def.insertBefore(element, prevElement)
 
+	addAnimation: (options={}) ->
+		animation = document.createElementNS("http://www.w3.org/2000/svg", "animate")
+		
+		for own option, value of options
+				if option isnt "shape"
+					animation.setAttributeNS(null, "#{option}", "#{options[option]}")
+
+		options.shape.appendChild(animation)
+
+
 	mask: (shape, mask) ->
 		if typeof(shape) is "string"
 			shape = @.svg.getElementById("#{shape}")

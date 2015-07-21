@@ -93,6 +93,22 @@ exports.LayerSVG = (function(superClass) {
     }
   };
 
+  LayerSVG.prototype.addAnimation = function(options) {
+    var animation, option, value;
+    if (options == null) {
+      options = {};
+    }
+    animation = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+    for (option in options) {
+      if (!hasProp.call(options, option)) continue;
+      value = options[option];
+      if (option !== "shape") {
+        animation.setAttributeNS(null, "" + option, "" + options[option]);
+      }
+    }
+    return options.shape.appendChild(animation);
+  };
+
   LayerSVG.prototype.mask = function(shape, mask) {
     if (typeof shape === "string") {
       shape = this.svg.getElementById("" + shape);
