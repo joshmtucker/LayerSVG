@@ -8,6 +8,7 @@ class exports.LayerSVG extends Layer
 
 		@shapes = {}
 		@masks = {}
+		@clipPaths = {}
 
 	addShape: (options={}) ->
 		shape = document.createElementNS("http://www.w3.org/2000/svg", "#{options.shape}") 
@@ -21,52 +22,44 @@ class exports.LayerSVG extends Layer
 
 		return shape
 
-	addMask: (id, shapes) ->
-		mask = document.createElementNS("http://www.w3.org/2000/svg", "mask")
-		mask.setAttributeNS(null, "id", "#{id}")
+	addDef: (options={}) ->
+		def = document.createElementNS("http://www.w3.org/2000/svg", "#{options.type}")
+		def.setAttributeNS(null, "id", "#{options.id}")
 
-		if !Array.isArray(shapes)
-			shape = shapes
-
-			if typeof(shape) is "string"
-				shape = @.svg.getElementById("#{shape}")
-			
-			mask.appendChild(shape)
-		
-		else
-			for shape in shapes 
+		if def is "clipPath" or "mask"
+			for shape in options.shapes
 				if typeof(shape) is "string"
 					shape = @.svg.getElementById("#{shape}")
-				
-				mask.appendChild(shape)
+				def.appendChild(shape)
 
 		defs = @.svg.getElementsByTagName("defs")[0]
-		defs.appendChild(mask)
-		@masks["#{id}"] = mask
+		defs.appendChild(def)
 
-	addToMask: (shapes, mask, prevShape) ->
-		if typeof(mask) is "string"
-			mask = @.svg.getElementById("#{mask}")
+		if options.type is "clipPath" then @clipPaths["#{options.id}"] = def else @masks["#{options.id}"] = def
 
-		if !Array.isArray(shapes)
-			shape = shapes
-			if typeof(shape) is "string"
-				shape = @.svg.getElementById("#{shape}")
+	addToDef: (elements, def, prevElement) ->
+		if typeof(def) is "string"
+			def = @.svg.getElementById("#{def}")
 
-			if !prevShape
-				mask.appendChild(shape)
+		if !Array.isArray(elements)
+			element = elements
+			if typeof(element) is "string"
+				element = @.svg.getElementById("#{element}")
+
+			if !prevElement
+				def.appendChild(ele)
 			else
-				mask.insertBefore(shape, prevShape)
+				def.insertBefore(element, prevElement)
 
 		else
-			for shape in shapes
-				if typeof(shape) is "string"
-					shape = @.svg.getElementById("#{shape}")
+			for element in elements
+				if typeof(element) is "string"
+					element = @.svg.getElementById("#{element}")
 
-				if !prevShape
-					mask.appendChild(shape)
+				if !prevElement
+					def.appendChild(element)
 				else
-					mask.insertBefore(shape, prevShape)
+					def.insertBefore(element, prevElement)
 
 	mask: (shape, mask) ->
 		if typeof(shape) is "string"
@@ -76,3 +69,16 @@ class exports.LayerSVG extends Layer
 			mask = mask.getAttributeNS(null, "id")
 
 		shape.setAttributeNS(null, "mask", "url(##{mask})")
+
+	clipPath: (shape, clipPath) ->
+		if typeof(shape) is "string"
+			shape = @.svg.getElementById("#{shape}")
+
+		if typeof(clipPath) isnt "string"
+			clipPath = clipPath.getAttributeNS(null, "id")
+
+		shape.setAttributeNS(null, "clip-path", "url(##{clipPath})")
+
+
+
+

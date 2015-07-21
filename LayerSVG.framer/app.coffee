@@ -46,13 +46,16 @@ innerLense = instagramIcon.addShape
 	fill: "white"
 	id: "innerLense"
 	
+lenseMask = instagramIcon.addDef
+	type: "mask"
+	shapes: [iconMask, innerLense]
+	id: "lenseMask"
+	
 # Add mask
 # First property is the id of the mask you are creating
 # You can pass in one shape for this mask or an array of shapes. Note that I can reference a shape either by a local reference or the ID set
 # Order of shapes in the array is important with multiple
 # NOTE: the fill color of a shape that is inside a mask is important. White = anything inside that shape stays, Black = goes away with mask
-
-lenseMask = instagramIcon.addMask("lenseMask", [iconMask, "innerLense"])
 
 # Apply mask
 instagramIcon.mask("icon", "lenseMask")
@@ -68,7 +71,39 @@ outerLense = instagramIcon.addShape
 	r: 60
 	id: "outerLense"
 	
-instagramIcon.addToMask(outerLense, "lenseMask", innerLense)
+instagramIcon.addToDef(outerLense, "lenseMask", innerLense)
+
+grid = new LayerSVG width: 200, height: 200
+grid.center()
+grid.y = 0
+
+background = grid.addShape
+	shape: "rect"
+	x: 0
+	y: 0
+	width: 200
+	height: 200
+	fill: "white"
+	id: "background"
+
+circles = []
+
+for i in [0..2]
+	circles[i] = grid.addShape
+		shape: "circle"
+		cx: grid.width/2
+		cy: (24 + (24/2)) + (24 + (24/2) + 24)  * i
+		r: 20
+		id: "circle" + "#{i}"
+		
+grid.addDef
+	type: "clipPath"
+	shapes: circles
+	id: "clipPath"
 	
+grid.clipPath("background", "clipPath")
+	
+
+
 
 	
