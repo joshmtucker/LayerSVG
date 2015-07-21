@@ -55,7 +55,7 @@ innerLense = instagramIcon.addShape
 lenseMask = instagramIcon.addMask("lenseMask", [iconMask, "innerLense"])
 
 # Apply mask
-instagramIcon.mask(icon, "lenseMask")
+instagramIcon.mask("icon", "lenseMask")
 
 # addToMask
 # Add shapes later into an existing mask
@@ -68,7 +68,7 @@ outerLense = instagramIcon.addShape
 	r: 60
 	id: "outerLense"
 	
-instagramIcon.addToMask(outerLense, lenseMask, innerLense)
+instagramIcon.addToMask(outerLense, "lenseMask", innerLense)
 	
 
 	
