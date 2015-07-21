@@ -8,6 +8,7 @@ class exports.LayerSVG extends Layer
 
 		@shapes = {}
 		@masks = {}
+		@clipPaths = {}
 
 	addShape: (options={}) ->
 		shape = document.createElementNS("http://www.w3.org/2000/svg", "#{options.shape}") 
@@ -21,28 +22,20 @@ class exports.LayerSVG extends Layer
 
 		return shape
 
-	addMask: (id, shapes) ->
-		mask = document.createElementNS("http://www.w3.org/2000/svg", "mask")
-		mask.setAttributeNS(null, "id", "#{id}")
+	addDef: (options={}) ->
+		def = document.createElementNS("http://www.w3.org/2000/svg", "#{options.type}")
+		def.setAttributeNS(null, "id", "#{options.id}")
 
-		if !Array.isArray(shapes)
-			shape = shapes
-
-			if typeof(shape) is "string"
-				shape = @.svg.getElementById("#{shape}")
-			
-			mask.appendChild(shape)
-		
-		else
-			for shape in shapes 
+		if def is "clipPath" or "mask"
+			for shape in options.shapes
 				if typeof(shape) is "string"
 					shape = @.svg.getElementById("#{shape}")
-				
-				mask.appendChild(shape)
+				def.appendChild(shape)
 
 		defs = @.svg.getElementsByTagName("defs")[0]
-		defs.appendChild(mask)
-		@masks["#{id}"] = mask
+		defs.appendChild(def)
+
+		if options.type is "clipPath" then @clipPaths["#{options.id}"] = def else @masks["#{options.id}"] = def
 
 	addToMask: (shapes, mask, prevShape) ->
 		if typeof(mask) is "string"

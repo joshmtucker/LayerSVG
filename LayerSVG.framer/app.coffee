@@ -46,13 +46,18 @@ innerLense = instagramIcon.addShape
 	fill: "white"
 	id: "innerLense"
 	
+lenseMask = instagramIcon.addDef
+	type: "mask"
+	shapes: [iconMask, innerLense]
+	id: "lenseMask"
+	
 # Add mask
 # First property is the id of the mask you are creating
 # You can pass in one shape for this mask or an array of shapes. Note that I can reference a shape either by a local reference or the ID set
 # Order of shapes in the array is important with multiple
 # NOTE: the fill color of a shape that is inside a mask is important. White = anything inside that shape stays, Black = goes away with mask
 
-lenseMask = instagramIcon.addMask("lenseMask", [iconMask, "innerLense"])
+###
 
 # Apply mask
 instagramIcon.mask("icon", "lenseMask")
@@ -69,6 +74,7 @@ outerLense = instagramIcon.addShape
 	id: "outerLense"
 	
 instagramIcon.addToMask(outerLense, "lenseMask", innerLense)
-	
+
+###
 
 	
