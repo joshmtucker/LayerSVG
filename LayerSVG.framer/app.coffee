@@ -57,8 +57,6 @@ lenseMask = instagramIcon.addDef
 # Order of shapes in the array is important with multiple
 # NOTE: the fill color of a shape that is inside a mask is important. White = anything inside that shape stays, Black = goes away with mask
 
-###
-
 # Apply mask
 instagramIcon.mask("icon", "lenseMask")
 
@@ -73,7 +71,7 @@ outerLense = instagramIcon.addShape
 	r: 60
 	id: "outerLense"
 	
-instagramIcon.addToMask(outerLense, "lenseMask", innerLense)
+instagramIcon.addToDef(outerLense, "lenseMask", innerLense)
 
 ###
 

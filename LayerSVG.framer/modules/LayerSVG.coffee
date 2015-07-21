@@ -37,29 +37,29 @@ class exports.LayerSVG extends Layer
 
 		if options.type is "clipPath" then @clipPaths["#{options.id}"] = def else @masks["#{options.id}"] = def
 
-	addToMask: (shapes, mask, prevShape) ->
-		if typeof(mask) is "string"
-			mask = @.svg.getElementById("#{mask}")
+	addToDef: (elements, def, prevElement) ->
+		if typeof(def) is "string"
+			def = @.svg.getElementById("#{def}")
 
-		if !Array.isArray(shapes)
-			shape = shapes
-			if typeof(shape) is "string"
-				shape = @.svg.getElementById("#{shape}")
+		if !Array.isArray(elements)
+			element = elements
+			if typeof(element) is "string"
+				element = @.svg.getElementById("#{element}")
 
-			if !prevShape
-				mask.appendChild(shape)
+			if !prevElement
+				def.appendChild(ele)
 			else
-				mask.insertBefore(shape, prevShape)
+				def.insertBefore(element, prevElement)
 
 		else
-			for shape in shapes
-				if typeof(shape) is "string"
-					shape = @.svg.getElementById("#{shape}")
+			for element in elements
+				if typeof(element) is "string"
+					element = @.svg.getElementById("#{element}")
 
-				if !prevShape
-					mask.appendChild(shape)
+				if !prevElement
+					def.appendChild(element)
 				else
-					mask.insertBefore(shape, prevShape)
+					def.insertBefore(element, prevElement)
 
 	mask: (shape, mask) ->
 		if typeof(shape) is "string"
