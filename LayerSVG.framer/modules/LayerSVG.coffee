@@ -69,3 +69,16 @@ class exports.LayerSVG extends Layer
 			mask = mask.getAttributeNS(null, "id")
 
 		shape.setAttributeNS(null, "mask", "url(##{mask})")
+
+	clipPath: (shape, clipPath) ->
+		if typeof(shape) is "string"
+			shape = @.svg.getElementById("#{shape}")
+
+		if typeof(clipPath) isnt "string"
+			clipPath = clipPath.getAttributeNS(null, "id")
+
+		shape.setAttributeNS(null, "clip-path", "url(##{clipPath})")
+
+
+
+

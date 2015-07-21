@@ -73,6 +73,37 @@ outerLense = instagramIcon.addShape
 	
 instagramIcon.addToDef(outerLense, "lenseMask", innerLense)
 
-###
+grid = new LayerSVG width: 200, height: 200
+grid.center()
+grid.y = 0
+
+background = grid.addShape
+	shape: "rect"
+	x: 0
+	y: 0
+	width: 200
+	height: 200
+	fill: "white"
+	id: "background"
+
+circles = []
+
+for i in [0..2]
+	circles[i] = grid.addShape
+		shape: "circle"
+		cx: grid.width/2
+		cy: (24 + (24/2)) + (24 + (24/2) + 24)  * i
+		r: 20
+		id: "circle" + "#{i}"
+		
+grid.addDef
+	type: "clipPath"
+	shapes: circles
+	id: "clipPath"
+	
+grid.clipPath("background", "clipPath")
+	
+
+
 
 	

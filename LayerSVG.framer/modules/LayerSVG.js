@@ -103,6 +103,16 @@ exports.LayerSVG = (function(superClass) {
     return shape.setAttributeNS(null, "mask", "url(#" + mask + ")");
   };
 
+  LayerSVG.prototype.clipPath = function(shape, clipPath) {
+    if (typeof shape === "string") {
+      shape = this.svg.getElementById("" + shape);
+    }
+    if (typeof clipPath !== "string") {
+      clipPath = clipPath.getAttributeNS(null, "id");
+    }
+    return shape.setAttributeNS(null, "clip-path", "url(#" + clipPath + ")");
+  };
+
   return LayerSVG;
 
 })(Layer);
