@@ -1,10 +1,14 @@
 class exports.LayerSVG extends Layer 
 	constructor: (options={}) ->
 		
+		options.width ?= Framer.Defaults.Layer.width
+		options.height ?= Framer.Defaults.Layer.height
+		options.id ?= "svg"
+		options.html = "<svg id='#{options.id}' width='#{options.width}' height='#{options.height}'><defs></defs></svg>"
+		
 		super options
 
-		@html = "<svg id='#{options.id}' width='#{@.width}' height='#{@.height}'><defs></defs></svg>"
-		@svg = @.querySelector("##{options.id}")	
+		#@svg = @.querySelector("##{options.id}")	
 
 		@shapes = {}
 		@masks = {}
@@ -61,7 +65,7 @@ class exports.LayerSVG extends Layer
 				else
 					def.insertBefore(element, prevElement)
 
-	addAnimation: (options={}) ->
+	animate: (options={}) ->
 		animation = document.createElementNS("http://www.w3.org/2000/svg", "animate")
 		
 		for own option, value of options
@@ -88,7 +92,6 @@ class exports.LayerSVG extends Layer
 			clipPath = clipPath.getAttributeNS(null, "id")
 
 		shape.setAttributeNS(null, "clip-path", "url(##{clipPath})")
-
 
 
 

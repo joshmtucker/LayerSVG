@@ -9,9 +9,17 @@ exports.LayerSVG = (function(superClass) {
     if (options == null) {
       options = {};
     }
+    if (options.width == null) {
+      options.width = Framer.Defaults.Layer.width;
+    }
+    if (options.height == null) {
+      options.height = Framer.Defaults.Layer.height;
+    }
+    if (options.id == null) {
+      options.id = "svg";
+    }
+    options.html = "<svg id='" + options.id + "' width='" + options.width + "' height='" + options.height + "'><defs></defs></svg>";
     LayerSVG.__super__.constructor.call(this, options);
-    this.html = "<svg id='" + options.id + "' width='" + this.width + "' height='" + this.height + "'><defs></defs></svg>";
-    this.svg = this.querySelector("#" + options.id);
     this.shapes = {};
     this.masks = {};
     this.clipPaths = {};
@@ -93,7 +101,7 @@ exports.LayerSVG = (function(superClass) {
     }
   };
 
-  LayerSVG.prototype.addAnimation = function(options) {
+  LayerSVG.prototype.animate = function(options) {
     var animation, option, value;
     if (options == null) {
       options = {};
